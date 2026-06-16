@@ -1,0 +1,37 @@
+name: build builder
+
+on:
+    pull_request:
+        branches: main
+    push:
+        branches: main
+
+permissions:
+    packages: write
+    contents: read
+
+env:
+    PUSHERS: '["RixInGithub"]'
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - run: podman build -t ${{ github.event.repository.name }}:latest .
+            - name: login to ghcr
+              uses: docker/login-action@v4
+              if: github.event_name == 'push' && contains(fromJSON(env.PUSHERS), github.actor)
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+            - name: push to ghcr
+              uses: redhat-actions/push-to-registry@v2
+              if: github.event_name == 'push' && contains(fromJSON(env.PUSHERS), github.actor)
+              with:
+                  registry: "ghcr.io/${{ github.repository_owner }}"
+                  image: "${{ github.event.repository.name }}"
+                  tags: latest
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
