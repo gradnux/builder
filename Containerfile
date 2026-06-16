@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:noble
 
-RUN apt update -y && apt install -y build-essential gcc aria2 git podman
+RUN apt update -y && apt install -y build-essential gcc aria2 git podman sudo
 
 RUN mkdir -p ~/builds/musl ~/musl && \
 	cd ~/builds && \
