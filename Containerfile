@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:noble
 
-RUN apt update -y && apt install -y build-essential gcc aria2c
+RUN apt update -y && apt install -y build-essential gcc aria2
 
 RUN mkdir ~/builds/musl && \
 	cd ~/builds && \
@@ -12,5 +12,6 @@ RUN mkdir ~/builds/musl && \
 	sudo make install && \
 	cd .. && \
 	rm -rf musl
+# "started with gcc 4.8.1, the memset code will be miscompiled. This can be worked around by adding -fno-tree-loop-distribute-patterns to the CFLAGS or passing –enable-optimize=size to configure."
 
 ENV PATH=$HOME/musl/bin:$PATH LD_LIBRARY_PATH=$HOME/musl/lib CC=$HOME/musl/bin/musl-gcc
