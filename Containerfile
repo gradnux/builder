@@ -9,7 +9,7 @@ RUN mkdir -p ~/builds/musl ~/musl && \
 	cd musl && \
 	CC=gcc AR=ar RANLIB=ranlib ./configure --prefix="$HOME"/musl/ --target=x86_64-linux-musl –enable-optimize=size && \
 	make -j$(nproc) && \
-	sudo make install && \
+	make install && \
 	cd .. && \
 	rm -rf musl
 # "started with gcc 4.8.1, the memset code will be miscompiled. This can be worked around by adding -fno-tree-loop-distribute-patterns to the CFLAGS or passing –enable-optimize=size to configure."
